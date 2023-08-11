@@ -1,8 +1,9 @@
+import { metadata } from "./layout";
 
 export default function Home() {
+  metadata.title = "Home"
   return (
     <main className='mb-10'>
-
       <article className='bg-neutral-200 border-2 text-black border-black xl:w-1280 mx-auto p-10 rounded shadow-md mt-10'>
         <h1 className='text-4xl mb-5'>Hello there, welcome!</h1>
         <p className="text-neutral-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Et labore commodi excepturi quod, reiciendis dicta tempore beatae minima. Laboriosam, repellat!</p>
