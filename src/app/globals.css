@@ -2,26 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+:root{
+  --body-bg-1:#949be1;
+  --body-bg-2:#b3b5e9;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+body{
+  font-family: 'Open Sans', monospace;
+  background: #f6e7d7;
+  color: white;
+
+  background: repeating-linear-gradient( -45deg, var(--body-bg-1), var(--body-bg-1) 50%, var(--body-bg-2)  5px, var(--body-bg-2)100% );
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+
+/* Autofill forms */
+&:-webkit-autofill::first-line,
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  
+  -webkit-text-fill-color: black;
+  padding: 0.25rem;
+    line-height: 1.75rem;
+  -webkit-box-shadow: 0 0 0px 1000px #d4d4d4 inset;
+  transition: background-color 5000s ease-in-out 0s;
+  border-radius: 0.25rem;
 }
+
+
+/* Loading Spinner */
+.loader {
+  margin: 0 auto;
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+  border-top: 4px solid #6366f1;
+  width: 25px;
+  height: 25px;
+  -webkit-animation: spin 1.75s linear infinite; /* Safari */
+  animation: spin 1.75s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+
+/*///////////////// Pages ///////////////////////*/
+
+
+/* Home page */
+#home-grid-1{grid-template-areas: "a b" "a c";}
+#grid-item-1{grid-area: a;}#grid-item-2{grid-area: b;}#grid-item-3{grid-area: c;}
