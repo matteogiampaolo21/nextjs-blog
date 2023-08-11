@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function Dashboard() {
 
-    const router = useRouter()
+    const router = useRouter();
     const [currentUser, setUser] = useState({})
 
     useEffect(()=>{
