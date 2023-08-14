@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { auth } from '../../../firebase/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
 
@@ -26,10 +26,14 @@ export default function Register() {
 
     await createUserWithEmailAndPassword(auth, email, password).then(
       (userCred) => {
-        userCred.user.displayName = name;
-        userCred.user.photoURL = defaultProfilePic
-        console.log(userCred.user);
-        router.push("/signin")
+        updateProfile(userCred.user, {
+          displayName: name,
+          photoURL: defaultProfilePic,
+        }).then(
+          router.push("/signin")
+        ).catch((err) => {
+          console.log(err)
+        })
       }
     )
   }
