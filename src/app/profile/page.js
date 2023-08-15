@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Image from "next/image";
 
-export default function Dashboard() {
+export default function Profile() {
 
     const router = useRouter();
 
@@ -17,7 +17,7 @@ export default function Dashboard() {
     const [isLoading, setLoading] = useState(false);
 
     const fileCSSloading = "bg-neutral-400 text-neutral-500";
-    const fileCSS = "bg-neutral-300 hover:bg-neutral-400 cursor-pointer";
+    const fileCSS = "bg-neutral-300 border-2 border-neutral-400 hover:bg-neutral-400 cursor-pointer";
     
     
 
@@ -50,7 +50,7 @@ export default function Dashboard() {
         
         setLoading(false);
         reload();
-        alert("Uploaded file!");
+        alert("Photo changed!");
     }
 
     const handleNameChange = async () => {

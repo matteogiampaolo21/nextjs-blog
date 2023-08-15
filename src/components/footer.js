@@ -58,7 +58,7 @@ export const Footer = () => {
 
             </section>
 
-            <div className=" mx-auto mt-16 text-sm text-center text-indigo-300 pt-5 ">© Copyright {year} | astro-site.com | All right reserved.</div>
+            <div className=" mx-auto mt-16 text-sm text-center text-indigo-300 pt-5 ">© Copyright {year} | nextjs-site.com | All right reserved.</div>
                 
         </footer>
     )
