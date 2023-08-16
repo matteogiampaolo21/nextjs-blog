@@ -36,7 +36,8 @@ export const Navbar = () => {
                 {isLoggedIn ?
                     <ul className="flex flex-row gap-5 items-center h-11">
                         <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/">Home</a></li>
-                        <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/test">Testing</a></li>
+                        <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/recipes">Recipes</a></li>
+                        <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/create-recipe">Create</a></li>
                         <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/profile">Profile</a></li>
                         <li className='ml-auto'> <button onClick={handleLogOut} className="bg-indigo-500 hover:bg-indigo-600 px-3 py-2 rounded font-bold duration-300 hover:text-white">Log out</button></li>
                     </ul>
