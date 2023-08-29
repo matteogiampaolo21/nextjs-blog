@@ -20,6 +20,7 @@ export default function Create() {
 
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
+    const [mainBody, setBody] = useState("");
     const [price, setPrice] = useState("0");
     const [difficulty, setDifficulty] = useState("Beginner");
 
@@ -46,6 +47,7 @@ export default function Create() {
         await addDoc(collection(db, "recipes"), {
             title: title,
             description: desc,
+            mainBody: mainBody,
             price: parseInt(price),
             difficulty: difficulty,
             image: "",
@@ -82,10 +84,10 @@ export default function Create() {
 
                     <div className="grid grid-cols-6 gap-x-5">
                         <label className="col-span-3 flex flex-col w-full">Title :
-                            <input onChange={(e) => {setTitle(e.target.value)}} className="bg-neutral-300 text-black rounded p-1 text-base mt-2 mb-5 border-neutral-500 border-2" type="text" name="title" id="title" />
+                            <input onChange={(e) => {setTitle(e.target.value)}} className="bg-neutral-300 text-black rounded px-2 py-1 text-base mt-2 mb-5  border-neutral-500 border-2 placeholder:text-neutral-500" placeholder="Title" type="text" name="title" id="title" />
                         </label>
                         <label className="flex col-span-2 flex-col w-full">Difficulty :
-                            <select onChange={(e) => {setDifficulty(e.target.value)}} className="bg-neutral-300 text-black h-9 rounded p-1 text-base mt-2 mb-5 border-neutral-500 border-2" name="difficulties" id="difficulties">
+                            <select onChange={(e) => {setDifficulty(e.target.value)}} className="bg-neutral-300 text-black h-9 rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" name="difficulties" id="difficulties">
                                 <option value="beginner">Beginner</option>
                                 <option value="easy">Easy</option>
                                 <option value="normal">Normal</option>
@@ -95,13 +97,13 @@ export default function Create() {
                         </label>
                         
                         <label className="col-span-1 w-full" htmlFor="price"> Price (US$) :
-                            <input onChange={(e) => {setPrice(e.target.value)}} className="bg-neutral-300 text-black w-full rounded p-1 text-base mt-2 mb-5 border-neutral-500 border-2" type="number" name="price" id="price" />
+                            <input onChange={(e) => {setPrice(e.target.value)}} className="bg-neutral-300 text-black w-full rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" placeholder="Price" type="number" name="price" id="price" />
                         </label>
                         
                     </div>
 
                     <label htmlFor="desc">Description :</label>
-                    <textarea onChange={(e) => {setDesc(e.target.value)}} className="bg-neutral-300 text-black rounded p-1 text-base mt-2 mb-5 border-neutral-500 border-2" type="text" name="desc" id="desc" />
+                    <textarea maxLength={150} onChange={(e) => {setDesc(e.target.value)}} className="bg-neutral-300 text-black rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" placeholder="Quick description to attract people. Max 150 characters" type="text" name="desc" id="desc" />
 
                     {/* <label htmlFor="upload-label" className="mb-2">Image :</label> */}
                     {/* <label id="upload-label" className={`${photo ? "text-indigo-500" : ""} ${isLoading? fileCSSloading : fileCSS} duration-300 px-3 py-1 w-max rounded text-base shadow-sm text-center`}>
@@ -109,6 +111,9 @@ export default function Create() {
                         Upload File
                     </label> */}
                     {/* <Image className="" src={""} alt="" /> */}
+
+                    <label htmlFor="main-body">Body :</label>
+                    <textarea onChange={(e) => {setBody(e.target.value)}} className="bg-neutral-300 text-black rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" placeholder="List all the details of the recipe. Ex. Ingredients, instructions, necessary machinery, etc." type="text" name="main-body" rows={15} id="main-body" />
                     
                     <button disabled={isLoading} onClick={createRecipe}  id="image-btn" className="bg-indigo-500 disabled:bg-indigo-300 hover:bg-indigo-600 border-2 border-indigo-600 duration-300 mt-5 w-max text-white px-3 py-1 rounded text-base shadow-sm ">Submit Recipe</button>
                 </form>

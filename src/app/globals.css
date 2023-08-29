@@ -63,9 +63,20 @@ select:-webkit-autofill:focus {
 
 
 
+
+
 /*///////////////// Pages ///////////////////////*/
 
 
 /* Home page */
 #home-grid-1{grid-template-areas: "a b" "a c";}
 #grid-item-1{grid-area: a;}#grid-item-2{grid-area: b;}#grid-item-3{grid-area: c;}
+
+/* Recipes Page */
+
+.bg-beginner{background-color: #404040;}
+.bg-easy{background-color: #15803d;}
+.bg-normal{background-color: #0369a1;}
+.bg-hard{background-color: #b45309;}
+.bg-expert{background-color: #b91c1c;}
+
