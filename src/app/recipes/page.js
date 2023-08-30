@@ -56,9 +56,10 @@ export default function Recipes() {
                 <h1 className="text-4xl mb-10">Recipes</h1>
                 {recipes.map((recipe, index) => {
                     return(
-                        <article key={index} className="mb-10 border-b-2 pb-5 border-neutral-300">
-                            <h1 className="text-2xl py-1 flex flex-row gap-2 items-center"><span className="cursor-pointer" onClick={() => {router.push(`/recipes/${recipe.id}`)}} >{recipe.title}</span> - <span className={`bg-${recipe.difficulty} px-2 rounded text-lg font-bold text-white`}>{recipe.difficulty}</span></h1>
-                            <p className="text-neutral-600">${recipe.price}</p>
+                        <article key={index} className="mb-10 border-b-2 pb-5 border-neutral-300  ">
+                            {recipe.image == "" ? <></> :<Image src={recipe.image} width={0} height={0} sizes="100vw" quality={50} className="w-full h-640 object-cover rounded mb-5"  alt="food photo"/>}
+                            <h1 className="text-2xl py-1 flex flex-row gap-2 items-center"><span className="cursor-pointer" onClick={() => {router.push(`/recipes/${recipe.id}`)}} >{recipe.title}</span> <span className={`bg-${recipe.difficulty} px-2 rounded text-lg font-bold text-white`}>{recipe.difficulty}</span></h1>
+                            <p className="text-neutral-600 mb-2">${recipe.price}</p>
                             <p>{recipe.description}</p>
                         </article>
                     )

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 import { db } from "../../../firebase/firebase";
-import { doc, addDoc, collection } from "firebase/firestore";
+import { doc, updateDoc, addDoc, collection } from "firebase/firestore";
 import { auth, storage } from '../../../firebase/firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/navigation';
@@ -44,7 +44,7 @@ export default function Create() {
         e.preventDefault();
         console.log(title,desc,price,difficulty);
 
-        await addDoc(collection(db, "recipes"), {
+        const docRef = await addDoc(collection(db, "recipes"), {
             title: title,
             description: desc,
             mainBody: mainBody,
@@ -52,10 +52,30 @@ export default function Create() {
             difficulty: difficulty,
             image: "",
         })
+        const fileRef = ref(storage, 'recipes/' + docRef.id + '.png');
+
+        setLoading(true);
+        
+        const snapshot = await uploadBytes(fileRef, photo);
+        const photoURL = await getDownloadURL(fileRef);
+
+        const recipeRef = doc(db,"recipes", docRef.id);
+
+        await updateDoc(recipeRef, {
+            image: photoURL,
+        })
+        
+        setLoading(false);
 
         router.push("/recipes")
-    }
 
+    }
+    const handlePicChange = (e) => {
+        if (e.target.files[0]) {
+            setPhoto(e.target .files[0])
+        }
+        // document.getElementById("img-label-btn").textContent = "File Uploaded"
+    }
     // const uploadImage = async(e) => {
     //     if (e.target.files[0]) {
     //         setPhoto(e.target .files[0])
@@ -114,6 +134,13 @@ export default function Create() {
 
                     <label htmlFor="main-body">Body :</label>
                     <textarea onChange={(e) => {setBody(e.target.value)}} className="bg-neutral-300 text-black rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" placeholder="List all the details of the recipe. Ex. Ingredients, instructions, necessary machinery, etc." type="text" name="main-body" rows={15} id="main-body" />
+
+
+                    <label htmlFor="image-btn">Image :</label> 
+                    <label id="img-label-btn" className={`${photo ? "text-indigo-500" : ""} ${isLoading? fileCSSloading : fileCSS} duration-300 px-3 py-1 mt-2 rounded text-lg shadow-sm text-center `}>
+                        <input disabled={isLoading} onChange={handlePicChange} className="hidden" id="file-input" type="file"/>
+                        {photo?"File uploaded" : "Upload File"}
+                    </label>
                     
                     <button disabled={isLoading} onClick={createRecipe}  id="image-btn" className="bg-indigo-500 disabled:bg-indigo-300 hover:bg-indigo-600 border-2 border-indigo-600 duration-300 mt-5 w-max text-white px-3 py-1 rounded text-base shadow-sm ">Submit Recipe</button>
                 </form>
