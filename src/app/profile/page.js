@@ -1,7 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { auth, storage } from '../../../firebase/firebase';
+import { auth, storage, db } from '../../../firebase/firebase';
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { getDocs, collection, query, where } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Image from "next/image";
@@ -15,6 +16,7 @@ export default function Profile() {
     const [nameChange, setNameChange] = useState("")
     const [photo, setPhoto] = useState(null);
     const [isLoading, setLoading] = useState(false);
+    const [recipes, setRecipes] = useState([]);
 
     const fileCSSloading = "bg-neutral-400 text-neutral-500";
     const fileCSS = "bg-neutral-300 border-2 border-neutral-400 hover:bg-neutral-400 cursor-pointer";
@@ -22,15 +24,43 @@ export default function Profile() {
     
 
     useEffect(()=>{
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user){
                 setUser(user);
+                console.log(user.uid)
+                const q = query(collection(db, 'recipes'), where("creatorID", "==", user.uid))
+                const querySnapshot = await getDocs(q);
+                const tempArray = [];
+                
+                querySnapshot.forEach( (doc) => {
+                    let tempObj = doc.data();
+                    tempObj.id = doc.id;
+                    tempArray.push(tempObj)
+                })
+                setRecipes(tempArray);
+            
+
             }else{
                 console.log("user not signed in");
                 router.push("/signin")
                 
             }
         })
+        
+        const getRecipes = async () => {
+            console.log(currentUser.uid)
+            const q = query(collection(db, 'recipes'), where("creatorID", "==", currentUser.uid))
+            const querySnapshot = await getDocs(q);
+          
+            
+            querySnapshot.forEach( (doc) => {
+                let tempObj = doc.data();
+                tempObj.id = doc.id;
+                tempArray.push(tempObj)
+            })
+            setRecipes(tempArray);
+            
+        }
         
     }, [])
 
@@ -71,12 +101,11 @@ export default function Profile() {
         }
     }
 
-
     
     
     return (
         <>
-            <nav id="user-panel" className="flex flex-row justify-between bg-neutral-200 text-black border-2 border-black shadow-md p-10 rounded  w-1280 mx-auto mt-10">
+            <section id="user-panel" className="flex flex-row justify-between bg-neutral-200 text-black border-2 border-black shadow-md p-10 rounded  w-1280 mx-auto mt-10">
 
                 <section >
                     <h1 className="text-4xl mb-5">Welcome {currentUser.displayName} !</h1>
@@ -105,10 +134,18 @@ export default function Profile() {
                 
 
                 
-            </nav>
+            </section>
 
-            <main className="flex flex-col">
-                
+            <main className="flex flex-col bg-neutral-200 text-black border-2 border-black shadow-md p-10 rounded  w-1280 mx-auto mt-10">
+                <h2 className='text-4xl mb-10'>Your Recipes</h2>
+                {recipes.map((recipe, index) => {
+                    return(
+                        <article className='border-b-2 border-neutral-300 mb-5 ' key={index}>
+                            <h3 className='text-2xl cursor-pointer hover:text-violet-700 duration-300 hover:pl-3 mb-1 ' onClick={() => {router.push(`recipes/${recipe.id}`)}}>{recipe.title}</h3>
+                            <p className='text-neutral-800 break-words'>{recipe.description}</p>
+                        </article>
+                    )
+                })}
             </main>
         </>
     )

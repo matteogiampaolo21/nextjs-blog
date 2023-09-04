@@ -74,9 +74,9 @@ select:-webkit-autofill:focus {
 
 /* Recipes Page */
 
-.bg-beginner{background-color: #404040;}
-.bg-easy{background-color: #15803d;}
-.bg-normal{background-color: #0369a1;}
-.bg-hard{background-color: #b45309;}
-.bg-expert{background-color: #b91c1c;}
+.bg-Beginner{background-color: #404040;}
+.bg-Easy{background-color: #15803d;}
+.bg-Normal{background-color: #0369a1;}
+.bg-Hard{background-color: #b45309;}
+.bg-Expert{background-color: #b91c1c;}
 

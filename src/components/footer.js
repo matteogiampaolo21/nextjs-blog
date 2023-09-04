@@ -22,9 +22,9 @@ export const Footer = () => {
                         <h1 className="border-b-4 border-indigo-400 pb-2 pl-3 font-bold text-xl">Category</h1>
                     </header>
                     <div className="flex flex-col text-base gap-5 font-bold pl-3">
-                        <p><a href="">Home</a></p>
-                        <p><a href="">Page</a></p>
-                        <p><a href="">Contact</a></p>
+                        <p><a href="/">Home</a></p>
+                        <p><a href="/register">Register</a></p>
+                        <p><a href="/signin">Sign In</a></p>
                     </div>
 
                 </article>

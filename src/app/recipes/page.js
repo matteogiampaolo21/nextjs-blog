@@ -2,12 +2,16 @@
 import { useState, useEffect } from "react";
 
 import { db } from "../../../firebase/firebase";
-import { getDocs, collection } from "firebase/firestore";
-import { auth, storage } from '../../../firebase/firebase';
+import { getDocs, collection,doc, updateDoc } from "firebase/firestore";
+import { auth } from '../../../firebase/firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/navigation';
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Image from "next/image";
+
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+
 
 
 export default function Recipes() {
@@ -19,6 +23,8 @@ export default function Recipes() {
 
     const [recipes, setRecipes] = useState([]);
 
+    const yourPostCss = "text-red-500";
+    const otherPostCss = "text-neutral-400 cursor-pointer duration-200 hover:text-red-400";
 
 
     useEffect(()=>{
@@ -48,19 +54,35 @@ export default function Recipes() {
     }, [])
 
     
+    const handleLike = async (recipeID, userArray) => {
+        // console.log(userArray)
+        // console.log(typeof currentUser.uid)
+        // const updatedArray = userArray.push(currentUser.uid)
+        // console.log(typeof updatedArray);
+        const recipeRef = doc(db, "recipes", recipeID);
 
+        // Set the "capital" field of the city 'DC'
+        await updateDoc(recipeRef, {
+            "likeCount.users": userArray.concat(currentUser.uid)
+        });
+    }
   
     return(
-        <>
+        <>  
+            
             <main className="flex flex-col justify-between bg-neutral-200 text-black border-2 border-neutral-500 shadow-md p-10 rounded  w-1280 mx-auto mt-10">
                 <h1 className="text-4xl mb-10">Recipes</h1>
                 {recipes.map((recipe, index) => {
                     return(
                         <article key={index} className="mb-10 border-b-2 pb-5 border-neutral-300  ">
-                            {recipe.image == "" ? <></> :<Image src={recipe.image} width={0} height={0} sizes="100vw" quality={50} className="w-full h-640 object-cover rounded mb-5"  alt="food photo"/>}
-                            <h1 className="text-2xl py-1 flex flex-row gap-2 items-center"><span className="cursor-pointer" onClick={() => {router.push(`/recipes/${recipe.id}`)}} >{recipe.title}</span> <span className={`bg-${recipe.difficulty} px-2 rounded text-lg font-bold text-white`}>{recipe.difficulty}</span></h1>
+                            {recipe.image == "" ? <></> :<Image loading={index === 0 ? "eager" : "lazy"} src={recipe.image} width={0} height={0} sizes="100vw" quality={50} className="w-full h-640 object-cover rounded mb-5 border-2 border-black"  alt="food photo"/>}
+                            <h1 className="text-2xl py-1 flex flex-row gap-2 items-center"><span className="cursor-pointer hover:text-violet-500 duration-200" onClick={() => {router.push(`/recipes/${recipe.id}`)}} >{recipe.title}</span> <span className={`bg-${recipe.difficulty} px-2 rounded text-lg font-bold text-white`}>{recipe.difficulty}</span></h1>
                             <p className="text-neutral-600 mb-2">${recipe.price}</p>
                             <p>{recipe.description}</p>
+                            <aside className="flex flex-row items-center gap-2">
+                                <button onClick={() => {handleLike(recipe.id,recipe.likeCount.users)}} disabled={recipe.creatorID === currentUser.uid ? true : false}><FontAwesomeIcon icon={faHeart}  className={`${recipe.likeCount.users.includes(currentUser.uid)? yourPostCss : otherPostCss} text-xl  m-0`} /></button>
+                                <p>{recipe.likeCount.likes} </p>
+                            </aside>
                         </article>
                     )
                 })}

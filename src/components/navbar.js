@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { signOut, onAuthStateChanged} from "firebase/auth";
 import { auth } from '../../firebase/firebase';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'
 
 export const Navbar = () => {
 
@@ -30,22 +31,22 @@ export const Navbar = () => {
         }
     }
     return (
-        <header className="xl:w-1280 mx-auto bg-neutral-800 border-2 border-black rounded shadow-md p-5 text-lg mt-10 ">
+        <header className="xl:w-1280 mx-auto bg-neutral-200 border-2 text-black border-neutral-500 rounded shadow-md p-5 text-lg mt-10 ">
             <nav>
                 
                 {isLoggedIn ?
                     <ul className="flex flex-row gap-5 items-center h-11">
-                        <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/">Home</a></li>
-                        <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/recipes">Recipes</a></li>
-                        <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/create-recipe">Create</a></li>
-                        <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/profile">Profile</a></li>
-                        <li className='ml-auto'> <button onClick={handleLogOut} className="bg-indigo-500 hover:bg-indigo-600 px-3 py-2 rounded font-bold duration-300 hover:text-white">Log out</button></li>
+                        <Link className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/">Home</Link>
+                        <Link className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/recipes">Recipes</Link>
+                        <Link className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/create-recipe">Create</Link>
+                        <Link className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/profile">Profile</Link>
+                        <li className='ml-auto'> <button onClick={handleLogOut} className="bg-indigo-500 text-white hover:bg-indigo-600 px-3 py-2 rounded font-bold duration-300 ">Log out</button></li>
                     </ul>
                 :
                     <ul className="flex flex-row gap-5 items-center h-11">
-                        <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/">Home</a></li>
-                        <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/register">Register</a></li>
-                        <li><a className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/signin">Sign In</a></li>
+                        <Link className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/">Home</Link>
+                        <Link className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/register">Register</Link>
+                        <Link className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/signin">Sign In</Link>
                     </ul>
                 }
             </nav>

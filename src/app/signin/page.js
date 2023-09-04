@@ -15,7 +15,7 @@ export default function SignIn() {
         e.preventDefault()
         signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-            router.push("dashboard")
+            router.push("profile")
         })
         .catch((error) => {
             console.log(error)

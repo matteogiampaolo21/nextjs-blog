@@ -46,6 +46,8 @@ export default function Create() {
 
         const docRef = await addDoc(collection(db, "recipes"), {
             title: title,
+            creatorID: currentUser.uid,
+            likeCount: {likes: 1, users: [currentUser.uid]},
             description: desc,
             mainBody: mainBody,
             price: parseInt(price),
@@ -108,11 +110,11 @@ export default function Create() {
                         </label>
                         <label className="flex col-span-2 flex-col w-full">Difficulty :
                             <select onChange={(e) => {setDifficulty(e.target.value)}} className="bg-neutral-300 text-black h-9 rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" name="difficulties" id="difficulties">
-                                <option value="beginner">Beginner</option>
-                                <option value="easy">Easy</option>
-                                <option value="normal">Normal</option>
-                                <option value="hard">Hard</option>
-                                <option value="expert">Expert</option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Easy">Easy</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Hard">Hard</option>
+                                <option value="Expert">Expert</option>
                             </select>
                         </label>
                         
