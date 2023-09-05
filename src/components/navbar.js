@@ -31,7 +31,7 @@ export const Navbar = () => {
         }
     }
     return (
-        <header className="xl:w-1280 mx-auto bg-neutral-200 border-2 text-black border-neutral-500 rounded shadow-md p-5 text-lg mt-10 ">
+        <header className="xl:w-1280 mx-auto bg-neutral-200 border-2 text-black border-black rounded shadow-md p-5 text-lg mt-10 ">
             <nav>
                 
                 {isLoggedIn ?
@@ -40,7 +40,7 @@ export const Navbar = () => {
                         <Link className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/recipes">Recipes</Link>
                         <Link className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/create-recipe">Create</Link>
                         <Link className="hover:bg-indigo-500 px-3 py-2 rounded font-bold duration-300  hover:text-white" href="/profile">Profile</Link>
-                        <li className='ml-auto'> <button onClick={handleLogOut} className="bg-indigo-500 text-white hover:bg-indigo-600 px-3 py-2 rounded font-bold duration-300 ">Log out</button></li>
+                        <li className='ml-auto'> <button onClick={handleLogOut} className="bg-indigo-500 text-white hover:bg-indigo-600 px-3 py-2 rounded font-bold duration-300 border-black border-2">Log out</button></li>
                     </ul>
                 :
                     <ul className="flex flex-row gap-5 items-center h-11">

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 import { db } from "../../../firebase/firebase";
-import { getDocs, collection,doc, updateDoc } from "firebase/firestore";
+import { getDocs, collection,doc, updateDoc, onSnapshot } from "firebase/firestore";
 import { auth } from '../../../firebase/firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/navigation';
@@ -54,17 +54,26 @@ export default function Recipes() {
     }, [])
 
     
-    const handleLike = async (recipeID, userArray) => {
-        // console.log(userArray)
-        // console.log(typeof currentUser.uid)
-        // const updatedArray = userArray.push(currentUser.uid)
-        // console.log(typeof updatedArray);
-        const recipeRef = doc(db, "recipes", recipeID);
+    const handleLike = async (recipeID, userArray, likesNum) => {
 
-        // Set the "capital" field of the city 'DC'
-        await updateDoc(recipeRef, {
-            "likeCount.users": userArray.concat(currentUser.uid)
-        });
+        const recipeRef = doc(db, "recipes", recipeID);
+        if (userArray.includes(currentUser.uid)){
+            const index = userArray.indexOf(currentUser.uid);
+            userArray.splice(index,1)
+            await updateDoc(recipeRef, {
+                "likeCount.likes": likesNum - 1,
+                "likeCount.users": userArray,
+            });
+
+        }else {
+            
+            await updateDoc(recipeRef, {
+                "likeCount.likes": likesNum + 1,
+                "likeCount.users": userArray.concat(currentUser.uid)
+            });
+
+        }
+
     }
   
     return(
@@ -80,7 +89,7 @@ export default function Recipes() {
                             <p className="text-neutral-600 mb-2">${recipe.price}</p>
                             <p>{recipe.description}</p>
                             <aside className="flex flex-row items-center gap-2">
-                                <button onClick={() => {handleLike(recipe.id,recipe.likeCount.users)}} disabled={recipe.creatorID === currentUser.uid ? true : false}><FontAwesomeIcon icon={faHeart}  className={`${recipe.likeCount.users.includes(currentUser.uid)? yourPostCss : otherPostCss} text-xl  m-0`} /></button>
+                                <button onClick={() => {handleLike(recipe.id,recipe.likeCount.users,recipe.likeCount.likes)}} disabled={recipe.creatorID === currentUser.uid ? true : false}><FontAwesomeIcon icon={faHeart}  className={`${recipe.likeCount.users.includes(currentUser.uid)? yourPostCss : otherPostCss} text-xl  m-0`} /></button>
                                 <p>{recipe.likeCount.likes} </p>
                             </aside>
                         </article>
