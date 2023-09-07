@@ -1,9 +1,10 @@
 'use client'
 import { useState, useEffect } from "react";
 
-import { db } from "../../../firebase/firebase";
-import { getDocs, collection,doc, updateDoc, onSnapshot, query } from "firebase/firestore";
-import { auth } from '../../../firebase/firebase';
+import { FirebaseApp } from "firebase/app";
+import { db } from "../../../../../firebase/firebase";
+import { getDocs, collection,doc, updateDoc, onSnapshot, query, startAt, limit, orderBy, endAt, startAfter } from "firebase/firestore";
+import { auth } from '../../../../../firebase/firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
@@ -14,8 +15,7 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 
 
-export default function Recipes() {
-
+export default function Recipes({params}) {
     const router = useRouter();
     
     const [isLoading, setLoading] = useState(false);
@@ -25,7 +25,6 @@ export default function Recipes() {
 
     const yourPostCss = "text-red-500";
     const otherPostCss = "text-neutral-400 cursor-pointer duration-200 hover:text-red-400";
-
 
     useEffect(()=>{
         onAuthStateChanged(auth, (user) => {
@@ -38,31 +37,30 @@ export default function Recipes() {
             }
         })
 
-        const getRecipes = async () => {
-            // const querySnapshot = await getDocs(collection(db,"recipes"));
+        const getRecipes = async (doc) => {
+            
 
-            // const tempArray = []
-            // const unsub = onSnapshot(getDocs(collection(db,"recipes")), (docs) => {
+            const first = query(collection(db, "recipes"),orderBy("createdAt"),startAt(doc || 0),limit(3));
+            
 
-            //     docs.forEach( (doc) => {
-            //         let tempObj = doc.data();
-            //         tempObj.id = doc.id;
-            //         tempArray.push(tempObj)
-            //     })
+            const unsubscribe = onSnapshot(first, async (querySnapshot) => {
+                const lastVisibile = querySnapshot.docs[querySnapshot.docs.length-1];
+                console.log("last", lastVisibile)
 
-            // }) 
-
-            // setRecipes(tempArray)
-
-            const q = query(collection(db, "recipes"));
-            const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                const tempArray = [];
-                querySnapshot.forEach((doc) => {
-                    let tempObj = doc.data();
-                    tempObj.id = doc.id;
-                    tempArray.push(tempObj)
-                });
-                setRecipes(tempArray)
+                const next = query(collection(db,"recipes"),orderBy("likeCount.likes", "desc"),startAfter(lastVisibile),limit(3))
+                console.log(next)
+                const documentSnapshots = await getDocs(next)
+                console.log(documentSnapshots.docs)
+                documentSnapshots.forEach((doc) => {
+                    console.log(doc.data())
+                })
+                // const tempArray = [];
+                // querySnapshot.forEach((doc) => {
+                //     let tempObj = doc.data();
+                //     tempObj.id = doc.id;
+                //     tempArray.push(tempObj)
+                // });
+                // setRecipes(tempArray)
             });
             
         }
@@ -92,7 +90,6 @@ export default function Recipes() {
         }
 
     }
-  
     return(
         <>  
             
@@ -101,7 +98,7 @@ export default function Recipes() {
                 {recipes.map((recipe, index) => {
                     return(
                         <article key={index} className="mb-10 border-b-2 pb-5 border-neutral-300  ">
-                            {recipe.image == "" ? <></> :<Image loading={index === 0 ? "eager" : "lazy"} src={recipe.image} width={0} height={0} sizes="100vw" quality={10} className="w-full h-640 object-cover rounded mb-5 border-2 border-black"  alt="food photo"/>}
+                            {recipe.image == "" ? <></> :<Image loading={index === 0 ? "eager" : "lazy"} src={recipe.image} width={0} height={0} sizes="100vw" quality={50} className="w-full h-640 object-cover rounded mb-5 border-2 border-black"  alt="food photo"/>}
                             <h1 className="text-2xl py-1 flex flex-row gap-2 items-center"><span className="cursor-pointer hover:text-violet-500 duration-200" onClick={() => {router.push(`/recipes/${recipe.id}`)}} >{recipe.title}</span> <span className={`bg-${recipe.difficulty} px-2 rounded text-lg font-bold text-white`}>{recipe.difficulty}</span></h1>
                             <p className="text-neutral-600 mb-2">${recipe.price}</p>
                             <p>{recipe.description}</p>

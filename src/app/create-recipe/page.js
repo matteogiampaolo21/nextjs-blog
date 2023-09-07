@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 import { db } from "../../../firebase/firebase";
-import { doc, updateDoc, addDoc, collection } from "firebase/firestore";
+import { doc, updateDoc, addDoc, collection,serverTimestamp } from "firebase/firestore";
 import { auth, storage } from '../../../firebase/firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/navigation';
@@ -51,6 +51,7 @@ export default function Create() {
             description: desc,
             mainBody: mainBody,
             price: parseInt(price),
+            createdAt: serverTimestamp(),
             difficulty: difficulty,
             image: "",
         })
