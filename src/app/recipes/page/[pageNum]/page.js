@@ -37,36 +37,53 @@ export default function Recipes({params}) {
             }
         })
 
-        const getRecipes = async (doc) => {
+        const getRecipes = async () => {
             
 
-            const first = query(collection(db, "recipes"),orderBy("createdAt"),startAt(doc || 0),limit(3));
+            const first = query(collection(db, "recipes"),orderBy("createdAt","desc"),limit(3));
             
-
             const unsubscribe = onSnapshot(first, async (querySnapshot) => {
-                const lastVisibile = querySnapshot.docs[querySnapshot.docs.length-1];
-                console.log("last", lastVisibile)
-
-                const next = query(collection(db,"recipes"),orderBy("likeCount.likes", "desc"),startAfter(lastVisibile),limit(3))
-                console.log(next)
-                const documentSnapshots = await getDocs(next)
-                console.log(documentSnapshots.docs)
-                documentSnapshots.forEach((doc) => {
-                    console.log(doc.data())
-                })
-                // const tempArray = [];
-                // querySnapshot.forEach((doc) => {
-                //     let tempObj = doc.data();
-                //     tempObj.id = doc.id;
-                //     tempArray.push(tempObj)
-                // });
-                // setRecipes(tempArray)
+                
+                console.log(querySnapshot.docs)
+                const tempArray = [];
+                querySnapshot.forEach((doc) => {
+                    console.log(doc)
+                    let tempObj = doc.data();
+                    tempObj.id = doc.id;
+                    tempArray.push(tempObj)
+                });
+                setRecipes(tempArray)
             });
             
         }
         getRecipes();
         
     }, [])
+
+    const handleLoadMore = async () => {
+        const lastRecipeTime = recipes[recipes.length-1].createdAt
+        console.log(lastRecipeTime)
+
+        const next = query(collection(db,"recipes"),orderBy("createdAt","desc"),startAfter(lastRecipeTime),limit(3))
+        console.log(next)
+        // const documentSnapshots = await getDocs(next)
+        // console.log(documentSnapshots.docs)
+        // documentSnapshots.forEach((doc) => {
+        // console.log(doc.data())
+        const unsubscribe = onSnapshot(next, (querySnapshot) => {
+            
+            console.log(querySnapshot.docs)
+            const tempArray = [];
+            querySnapshot.forEach((doc) => {
+                console.log(doc.data())
+                let tempObj = doc.data();
+                tempObj.id = doc.id;
+                tempArray.push(tempObj)
+            });
+            setRecipes(recipes.concat(tempArray))
+        });
+    }
+    
 
     
     const handleLike = async (recipeID, userArray, likesNum) => {
@@ -109,6 +126,7 @@ export default function Recipes({params}) {
                         </article>
                     )
                 })}
+                <button onClick={handleLoadMore} className="bg-violet-500 hover:bg-violet-700 text-white duration-300 rounded py-1 text-lg">Load more</button>
             </main>
         </>
     )
