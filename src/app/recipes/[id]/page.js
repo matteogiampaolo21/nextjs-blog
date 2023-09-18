@@ -15,6 +15,7 @@ export default function Page({params}) {
                 setRecipe(docSnap.data());
             } else {
                 console.log("No such document!");
+                
             }
         }
         getRecipe()
