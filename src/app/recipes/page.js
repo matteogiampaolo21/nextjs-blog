@@ -23,12 +23,16 @@ export default function Recipes() {
     const [filterDiff , setFilterDiff] = useState("None");
     const [filterTime , setFilterTime] = useState("All time")
     const [sortBy, setSortBy] = useState("Latest")
+    const [updatedValues, setValues] = useState(["None","All time","Latest"])
 
     const [recipes, setRecipes] = useState([]);
 
     const yourPostCss = "text-red-500";
     const otherPostCss = "text-neutral-400 cursor-pointer duration-200 hover:text-red-400";
-
+    
+    let firebaseQuery = query(collection(db, "recipes"),orderBy("createdAt","desc"),limit(2));
+    const recipesRef = collection(db,"recipes");
+    
     useEffect(()=>{
         onAuthStateChanged(auth, (user) => {
             if (user){
@@ -44,9 +48,9 @@ export default function Recipes() {
         const getRecipes = async () => {
             
 
-            const first = query(collection(db, "recipes"),orderBy("createdAt","desc"),limit(10));
+            // const first = query(collection(db, "recipes"),orderBy("createdAt","desc"),limit(10));
             
-            const unsubscribe = onSnapshot(first, async (querySnapshot) => {
+            const unsubscribe = onSnapshot(firebaseQuery, async (querySnapshot) => {
                 
                 // console.log(querySnapshot.docs)
                 const tempArray = [];
@@ -68,9 +72,19 @@ export default function Recipes() {
         const lastRecipeTime = recipes[recipes.length-1].createdAt
         // console.log(lastRecipeTime)
 
-        const next = query(collection(db,"recipes"),orderBy("createdAt","desc"),startAfter(lastRecipeTime),limit(10))
+        let next;
         // console.log(next)
-        
+        if (updatedValues[0] === "None" && updatedValues[1] === "All time"){
+            next = query(collection(db,"recipes"),orderBy("createdAt",updatedValues[2]),startAfter(lastRecipeTime),limit(10))
+
+        }else if (updatedValues[0] !== "None" && updatedValues[1] == "All time"){
+            next = query(recipesRef,where("difficulty", "==", updatedValues[0]),orderBy("createdAt",updatedValues[2]),startAfter(lastRecipeTime),limit(10))
+        }else if (updatedValues[0] == "None" && updatedValues[1] !== "All time"){
+            console.log(updatedValues)
+            next = query(recipesRef,where("createdAt",">=",updatedValues[1]),orderBy("createdAt",updatedValues[2]),startAfter(lastRecipeTime),limit(10))
+        }else{
+            next = query(recipesRef,where("difficulty", "==", updatedValues[0]),where("createdAt",">=",updatedValues[1]),orderBy("createdAt",updatedValues[2]),startAfter(lastRecipeTime),limit(10))
+        }
         const unsubscribe = onSnapshot(next, (querySnapshot) => {
             
             if (querySnapshot.docs.length === 0) {
@@ -115,7 +129,7 @@ export default function Recipes() {
         e.preventDefault()
         console.log(filterDiff,filterTime,sortBy);
 
-        const startOfDay = new Date();
+        let startOfDay = new Date();
 
         let orderValue;
         if(sortBy === "Latest"){
@@ -135,38 +149,36 @@ export default function Recipes() {
             case "Year":
                 startOfDay.setDate(startOfDay.getDate() - 365);
                 break;
-            case "All Time":
+            case "All time":
+                startOfDay = "All time"
         }
         console.log(startOfDay)
 
-        const recipesRef = collection(db,"recipes");
-        let first;
         
 
         // if (){
 
         // }
         if (filterDiff === "None" && filterTime === "All time"){
-            first = query(recipesRef,orderBy("createdAt",orderValue),limit(10));
+            firebaseQuery = query(recipesRef,orderBy("createdAt",orderValue),limit(2));
+            setValues([filterDiff,startOfDay,orderValue])
         }else if (filterDiff !== "None" && filterTime == "All time"){
-            first = query(recipesRef,where("difficulty", "==", filterDiff),orderBy("createdAt",orderValue))
-        }else if (filterDiff == "None" && filterTime !== "All time"){
-            first = query(recipesRef,where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue))
-        }else{
-            first = query(recipesRef,where("difficulty", "==", filterDiff),where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue))
-        }
-        //     if (sortBy == "Oldest"){
-        //         first = query(recipesRef,where("difficulty", "==", filterDiff),where("createdAt",">=",startOfDay),orderBy("createdAt","asc"))
-        //     }else if (sortBy == "Loved"){
-        //     }else if (sortBy == "Hated"){
-        //         first = query(recipesRef,where("difficulty", "==", filterDiff),where("createdAt",">=",startOfDay),orderBy("likeCount.likes","asc"))
-        //     }
-        // }else{
+            firebaseQuery = query(recipesRef,where("difficulty", "==", filterDiff),orderBy("createdAt",orderValue),limit(2))
+            setValues([filterDiff,startOfDay,orderValue])
 
-        // }
+        }else if (filterDiff == "None" && filterTime !== "All time"){
+            firebaseQuery = query(recipesRef,where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue),limit(2))
+            setValues([filterDiff,startOfDay,orderValue])
+
+        }else{
+            firebaseQuery = query(recipesRef,where("difficulty", "==", filterDiff),where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue),limit(2))
+            setValues([filterDiff,startOfDay,orderValue])
+
+        }
+       
         
 
-        const unsubscribe = onSnapshot(first, async (querySnapshot) => {
+        onSnapshot(firebaseQuery, async (querySnapshot) => {
                 
             // console.log(querySnapshot.docs)
             const tempArray = [];
@@ -190,7 +202,7 @@ export default function Recipes() {
                     <label className="flex flex-col w-max">
                         <span className="text-xl"><FontAwesomeIcon icon={faFilter} className="text-neutral-600 pl-1" /> Filters</span>
                         <section className="flex flex-row gap-5">
-                            <select onChange={(e) => {setFilterDiff(e.target.value)}} className="bg-neutral-300 text-black h-9 rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" name="difficulties" id="difficulties">
+                            <select onChange={(e)=>{setFilterDiff(e.target.value)}} className="bg-neutral-300 text-black h-9 rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" name="difficulties" id="difficulties">
                                 <option value="None">None</option>
                                 <option value="Beginner">Beginner</option>
                                 <option value="Easy">Easy</option>
@@ -198,7 +210,7 @@ export default function Recipes() {
                                 <option value="Hard">Hard</option>
                                 <option value="Expert">Expert</option>
                             </select>
-                            <select defaultValue={"All time"} onChange={(e) => {setFilterTime(e.target.value)}} className="bg-neutral-300 text-black h-9 rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" name="difficulties" id="difficulties">
+                            <select defaultValue={"All time"} onChange={(e)=>{setFilterTime(e.target.value)}}   className="bg-neutral-300 text-black h-9 rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" name="times" id="times">
                                 <option value="Day">Day</option>
                                 <option value="Week">Week</option>
                                 <option value="Month">Month</option>
@@ -209,7 +221,7 @@ export default function Recipes() {
                     </label>
                     <label className="flex flex-col w-max">
                         <span className="text-xl"><FontAwesomeIcon icon={faSort} className="text-neutral-600 pl-1" /> Sort by </span>
-                        <select onChange={(e) => {setSortBy(e.target.value)}} className="bg-neutral-300 text-black h-9 rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" name="difficulties" id="difficulties">
+                        <select onChange={(e)=>{setSortBy(e.target.value)}} className="bg-neutral-300 text-black h-9 rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" name="orders" id="orders">
                             <option value="Latest">Latest</option>
                             <option value="Oldest">Oldest</option>
                         </select>
