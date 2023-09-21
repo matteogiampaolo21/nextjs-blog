@@ -14,7 +14,7 @@ import { faArrowRight,faSort, faFilter, faHeart } from "@fortawesome/free-solid-
 
 
 
-export default function Recipes() {
+export default function Posts() {
     const router = useRouter();
     
     const [isLoading, setLoading] = useState(false);
@@ -23,15 +23,15 @@ export default function Recipes() {
     const [filterDiff , setFilterDiff] = useState("None");
     const [filterTime , setFilterTime] = useState("All time")
     const [sortBy, setSortBy] = useState("Latest")
-    const [updatedValues, setValues] = useState(["None","All time","Latest"])
+    const [updatedValues, setValues] = useState(["None","All time","desc"])
 
-    const [recipes, setRecipes] = useState([]);
+    const [posts, setPosts] = useState([]);
 
     const yourPostCss = "text-red-500";
     const otherPostCss = "text-neutral-400 cursor-pointer duration-200 hover:text-red-400";
     
-    let firebaseQuery = query(collection(db, "recipes"),orderBy("createdAt","desc"),limit(2));
-    const recipesRef = collection(db,"recipes");
+    let firebaseQuery = query(collection(db, "posts"),orderBy("createdAt","desc"),limit(2));
+    const postsRef = collection(db,"posts");
     
     useEffect(()=>{
         onAuthStateChanged(auth, (user) => {
@@ -45,10 +45,9 @@ export default function Recipes() {
         })
 
         
-        const getRecipes = async () => {
+        const getPosts = async () => {
             
 
-            // const first = query(collection(db, "recipes"),orderBy("createdAt","desc"),limit(10));
             
             const unsubscribe = onSnapshot(firebaseQuery, async (querySnapshot) => {
                 
@@ -60,30 +59,29 @@ export default function Recipes() {
                     tempObj.id = doc.id;
                     tempArray.push(tempObj)
                 });
-                setRecipes(tempArray)
+                setPosts(tempArray)
             });
             
         }
-        getRecipes();
+        getPosts();
         
     }, [])
 
     const handleLoadMore = async () => {
-        const lastRecipeTime = recipes[recipes.length-1].createdAt
-        // console.log(lastRecipeTime)
+        const lastPostTime = posts[posts.length-1].createdAt
 
         let next;
         // console.log(next)
         if (updatedValues[0] === "None" && updatedValues[1] === "All time"){
-            next = query(collection(db,"recipes"),orderBy("createdAt",updatedValues[2]),startAfter(lastRecipeTime),limit(10))
+            next = query(collection(db,"posts"),orderBy("createdAt",updatedValues[2]),startAfter(lastPostTime),limit(10))
 
         }else if (updatedValues[0] !== "None" && updatedValues[1] == "All time"){
-            next = query(recipesRef,where("difficulty", "==", updatedValues[0]),orderBy("createdAt",updatedValues[2]),startAfter(lastRecipeTime),limit(10))
+            next = query(postsRef,where("difficulty", "==", updatedValues[0]),orderBy("createdAt",updatedValues[2]),startAfter(lastPostTime),limit(10))
         }else if (updatedValues[0] == "None" && updatedValues[1] !== "All time"){
             console.log(updatedValues)
-            next = query(recipesRef,where("createdAt",">=",updatedValues[1]),orderBy("createdAt",updatedValues[2]),startAfter(lastRecipeTime),limit(10))
+            next = query(postsRef,where("createdAt",">=",updatedValues[1]),orderBy("createdAt",updatedValues[2]),startAfter(lastPostTime),limit(10))
         }else{
-            next = query(recipesRef,where("difficulty", "==", updatedValues[0]),where("createdAt",">=",updatedValues[1]),orderBy("createdAt",updatedValues[2]),startAfter(lastRecipeTime),limit(10))
+            next = query(postsRef,where("difficulty", "==", updatedValues[0]),where("createdAt",">=",updatedValues[1]),orderBy("createdAt",updatedValues[2]),startAfter(lastPostTime),limit(10))
         }
         const unsubscribe = onSnapshot(next, (querySnapshot) => {
             
@@ -98,26 +96,26 @@ export default function Recipes() {
                 tempObj.id = doc.id;
                 tempArray.push(tempObj)
             });
-            setRecipes(recipes.concat(tempArray))
+            setPosts(posts.concat(tempArray))
         });
     }
     
 
     
-    const handleLike = async (recipeID, userArray, likesNum) => {
+    const handleLike = async (postID, userArray, likesNum) => {
 
-        const recipeRef = doc(db, "recipes", recipeID);
+        const postRef = doc(db, "posts", postID);
         if (userArray.includes(currentUser.uid)){
             const index = userArray.indexOf(currentUser.uid);
             userArray.splice(index,1)
-            await updateDoc(recipeRef, {
+            await updateDoc(postRef, {
                 "likeCount.likes": likesNum - 1,
                 "likeCount.users": userArray,
             });
 
         }else {
             
-            await updateDoc(recipeRef, {
+            await updateDoc(postRef, {
                 "likeCount.likes": likesNum + 1,
                 "likeCount.users": userArray.concat(currentUser.uid)
             });
@@ -160,18 +158,19 @@ export default function Recipes() {
 
         // }
         if (filterDiff === "None" && filterTime === "All time"){
-            firebaseQuery = query(recipesRef,orderBy("createdAt",orderValue),limit(2));
+            firebaseQuery = query(postsRef,orderBy("createdAt",orderValue),limit(2));
             setValues([filterDiff,startOfDay,orderValue])
+            
         }else if (filterDiff !== "None" && filterTime == "All time"){
-            firebaseQuery = query(recipesRef,where("difficulty", "==", filterDiff),orderBy("createdAt",orderValue),limit(2))
+            firebaseQuery = query(postsRef,where("difficulty", "==", filterDiff),orderBy("createdAt",orderValue),limit(2))
             setValues([filterDiff,startOfDay,orderValue])
 
         }else if (filterDiff == "None" && filterTime !== "All time"){
-            firebaseQuery = query(recipesRef,where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue),limit(2))
+            firebaseQuery = query(postsRef,where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue),limit(2))
             setValues([filterDiff,startOfDay,orderValue])
 
         }else{
-            firebaseQuery = query(recipesRef,where("difficulty", "==", filterDiff),where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue),limit(2))
+            firebaseQuery = query(postsRef,where("difficulty", "==", filterDiff),where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue),limit(2))
             setValues([filterDiff,startOfDay,orderValue])
 
         }
@@ -188,8 +187,8 @@ export default function Recipes() {
                 tempObj.id = doc.id;
                 tempArray.push(tempObj)
             });
-            setRecipes(tempArray)
-            // setRecipes(tempArray)
+            setPosts(tempArray)
+            // setPosts(tempArray)
         });
     }
 
@@ -197,7 +196,7 @@ export default function Recipes() {
         <>  
             
             <main className="flex flex-col justify-between bg-neutral-200 text-black border-2 border-black shadow-md p-10 rounded  w-1280 mx-auto mt-10">
-                <h1 className="text-4xl mb-10">Recipes</h1>
+                <h1 className="text-4xl mb-10">Posts</h1>
                 <form className="flex flex-row gap-10">
                     <label className="flex flex-col w-max">
                         <span className="text-xl"><FontAwesomeIcon icon={faFilter} className="text-neutral-600 pl-1" /> Filters</span>
@@ -233,16 +232,19 @@ export default function Recipes() {
                         </button>
                     </label>
                 </form>
-                {recipes.map((recipe, index) => {
+                {posts.map((post, index) => {
+                    let postDate = new Date(post.createdAt.toDate())
+                    postDate = `${postDate.getDate()} / ${postDate.getMonth()} / ${postDate.getFullYear()}`
                     return(
                         <article key={index} className="mb-10 border-b-2 pb-5 border-neutral-300  ">
-                            {recipe.image == "" ? <></> :<Image loading={index === 0 ? "eager" : "lazy"} src={recipe.image} width={0} height={0} sizes="100vw" quality={50} className="w-full h-640 object-cover rounded mb-5 border-2 border-black"  alt="food photo"/>}
-                            <h1 className="text-2xl py-1 flex flex-row gap-2 items-center"><span className="cursor-pointer hover:text-violet-500 duration-200" onClick={() => {router.push(`/recipes/${recipe.id}`)}} >{recipe.title}</span> <span className={`bg-${recipe.difficulty} px-2 rounded text-lg font-bold text-white`}>{recipe.difficulty}</span></h1>
-                            <p className="text-neutral-600 mb-2">${recipe.price}</p>
-                            <p>{recipe.description}</p>
+                            {post.image == "" ? <></> :<Image loading={index === 0 ? "eager" : "lazy"} src={post.image} width={0} height={0} sizes="100vw" quality={50} className="w-full h-640 object-cover rounded mb-5 border-2 border-black"  alt="food photo"/>}
+                            <h1 className="text-2xl py-1 flex flex-row gap-2 items-center"><span className="cursor-pointer hover:text-violet-500 duration-200" onClick={() => {router.push(`/posts/${post.id}`)}} >{post.title}</span> <span className={`bg-${post.difficulty} px-2 rounded text-lg font-bold text-white`}>{post.difficulty}</span></h1>
+                            <p className="text-neutral-700 mb-2">{postDate}</p>
+                            <p className="text-neutral-600 mb-2">${post.price}</p>
+                            <p>{post.description}</p>
                             <aside className="flex flex-row items-center gap-2">
-                                <button onClick={() => {handleLike(recipe.id,recipe.likeCount.users,recipe.likeCount.likes)}} disabled={recipe.creatorID === currentUser.uid ? true : false}><FontAwesomeIcon icon={faHeart}  className={`${recipe.likeCount.users.includes(currentUser.uid)? yourPostCss : otherPostCss} text-xl  m-0`} /></button>
-                                <p>{recipe.likeCount.likes} </p>
+                                <button onClick={() => {handleLike(post.id,post.likeCount.users,post.likeCount.likes)}} disabled={post.creatorID === currentUser.uid ? true : false}><FontAwesomeIcon icon={faHeart}  className={`${post.likeCount.users.includes(currentUser.uid)? yourPostCss : otherPostCss} text-xl  m-0`} /></button>
+                                <p>{post.likeCount.likes} </p>
                             </aside>
                         </article>
                     )

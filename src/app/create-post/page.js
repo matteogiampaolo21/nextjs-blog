@@ -40,11 +40,11 @@ export default function Create() {
         
     }, [])
 
-    const createRecipe = async(e) => {
+    const createPost = async(e) => {
         e.preventDefault();
         console.log(title,desc,price,difficulty);
 
-        const docRef = await addDoc(collection(db, "recipes"), {
+        const docRef = await addDoc(collection(db, "posts"), {
             title: title,
             creatorID: currentUser.uid,
             likeCount: {likes: 1, users: [currentUser.uid]},
@@ -55,22 +55,22 @@ export default function Create() {
             difficulty: difficulty,
             image: "",
         })
-        const fileRef = ref(storage, 'recipes/' + docRef.id + '.png');
+        const fileRef = ref(storage, 'posts/' + docRef.id + '.png');
 
         setLoading(true);
         
         const snapshot = await uploadBytes(fileRef, photo);
         const photoURL = await getDownloadURL(fileRef);
 
-        const recipeRef = doc(db,"recipes", docRef.id);
+        const postRef = doc(db,"posts", docRef.id);
 
-        await updateDoc(recipeRef, {
+        await updateDoc(postRef, {
             image: photoURL,
         })
         
         setLoading(false);
 
-        router.push("/recipes")
+        router.push("/posts")
 
     }
     const handlePicChange = (e) => {
@@ -84,7 +84,7 @@ export default function Create() {
     //         setPhoto(e.target .files[0])
     //     }
         
-    //     const fileRef = ref(storage, 'recipes/' + currentUser.uid + '.png');
+    //     const fileRef = ref(storage, 'posts/' + currentUser.uid + '.png');
 
     //     setLoading(true);
         
@@ -102,7 +102,7 @@ export default function Create() {
             <main className="flex flex-col justify-between bg-neutral-200 text-black border-2 border-neutral-500 shadow-md p-10 rounded  w-1280 mx-auto mt-10">
                 
 
-                <h1 className="text-4xl mb-5">Create a Recipe</h1>
+                <h1 className="text-4xl mb-5">Create a Post</h1>
                 <form autoComplete="off" className="flex flex-col">
 
                     <div className="grid grid-cols-6 gap-x-5">
@@ -136,7 +136,7 @@ export default function Create() {
                     {/* <Image className="" src={""} alt="" /> */}
 
                     <label htmlFor="main-body">Body :</label>
-                    <textarea onChange={(e) => {setBody(e.target.value)}} className="bg-neutral-300 text-black rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" placeholder="List all the details of the recipe. Ex. Ingredients, instructions, necessary machinery, etc." type="text" name="main-body" rows={15} id="main-body" />
+                    <textarea onChange={(e) => {setBody(e.target.value)}} className="bg-neutral-300 text-black rounded px-2 py-1 text-base mt-2 mb-5 border-neutral-500 border-2 placeholder:text-neutral-500" placeholder="List all the details of the post. Ex. Ingredients, instructions, necessary machinery, etc." type="text" name="main-body" rows={15} id="main-body" />
 
 
                     <label htmlFor="image-btn">Image :</label> 
@@ -145,7 +145,7 @@ export default function Create() {
                         {photo?"File uploaded" : "Upload File"}
                     </label>
                     
-                    <button disabled={isLoading} onClick={createRecipe}  id="image-btn" className="bg-indigo-500 disabled:bg-indigo-300 hover:bg-indigo-600 border-2 border-indigo-600 duration-300 mt-5 w-max text-white px-3 py-1 rounded text-base shadow-sm ">Submit Recipe</button>
+                    <button disabled={isLoading} onClick={createPost}  id="image-btn" className="bg-indigo-500 disabled:bg-indigo-300 hover:bg-indigo-600 border-2 border-indigo-600 duration-300 mt-5 w-max text-white px-3 py-1 rounded text-base shadow-sm ">Submit Post</button>
                 </form>
             </main>
         </>

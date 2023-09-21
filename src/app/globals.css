@@ -72,7 +72,7 @@ select:-webkit-autofill:focus {
 #home-grid-1{grid-template-areas: "a b" "a c";}
 #grid-item-1{grid-area: a;}#grid-item-2{grid-area: b;}#grid-item-3{grid-area: c;}
 
-/* Recipes Page */
+/* Posts Page */
 
 .bg-Beginner{background-color: #404040;}
 .bg-Easy{background-color: #15803d;}
