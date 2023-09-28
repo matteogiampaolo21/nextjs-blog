@@ -17,7 +17,7 @@ import { faArrowRight,faSort, faFilter, faHeart } from "@fortawesome/free-solid-
 export default function Posts() {
     const router = useRouter();
     
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const [currentUser, setUser] = useState({});
 
     const [filterDiff , setFilterDiff] = useState("None");
@@ -27,10 +27,11 @@ export default function Posts() {
 
     const [posts, setPosts] = useState([]);
 
+
     const yourPostCss = "text-red-500";
     const otherPostCss = "text-neutral-400 cursor-pointer duration-200 hover:text-red-400";
     
-    let firebaseQuery = query(collection(db, "posts"),orderBy("createdAt","desc"),limit(2));
+    let firebaseQuery = query(collection(db, "posts"),orderBy("createdAt","desc"),limit(10));
     const postsRef = collection(db,"posts");
     
     useEffect(()=>{
@@ -60,6 +61,7 @@ export default function Posts() {
                     tempArray.push(tempObj)
                 });
                 setPosts(tempArray)
+                setLoading(false)
             });
             
         }
@@ -158,19 +160,19 @@ export default function Posts() {
 
         // }
         if (filterDiff === "None" && filterTime === "All time"){
-            firebaseQuery = query(postsRef,orderBy("createdAt",orderValue),limit(2));
+            firebaseQuery = query(postsRef,orderBy("createdAt",orderValue),limit(10));
             setValues([filterDiff,startOfDay,orderValue])
             
         }else if (filterDiff !== "None" && filterTime == "All time"){
-            firebaseQuery = query(postsRef,where("difficulty", "==", filterDiff),orderBy("createdAt",orderValue),limit(2))
+            firebaseQuery = query(postsRef,where("difficulty", "==", filterDiff),orderBy("createdAt",orderValue),limit(10))
             setValues([filterDiff,startOfDay,orderValue])
 
         }else if (filterDiff == "None" && filterTime !== "All time"){
-            firebaseQuery = query(postsRef,where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue),limit(2))
+            firebaseQuery = query(postsRef,where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue),limit(10))
             setValues([filterDiff,startOfDay,orderValue])
 
         }else{
-            firebaseQuery = query(postsRef,where("difficulty", "==", filterDiff),where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue),limit(2))
+            firebaseQuery = query(postsRef,where("difficulty", "==", filterDiff),where("createdAt",">=",startOfDay),orderBy("createdAt",orderValue),limit(10))
             setValues([filterDiff,startOfDay,orderValue])
 
         }
@@ -195,9 +197,9 @@ export default function Posts() {
     return(
         <>  
             
-            <main className="flex flex-col justify-between bg-neutral-200 text-black border-2 border-black shadow-md p-10 rounded  w-1280 mx-auto mt-10">
-                <h1 className="text-4xl mb-10">Posts</h1>
-                <form className="flex flex-row gap-10">
+            <main className="flex flex-col justify-between bg-neutral-200 text-black border-2 border-black shadow-md px-2 py-5 sm:p-10 rounded w-320 sm:w-640 md:w-768 lg:w-1024  xl:w-1280 mx-auto mt-10">
+                <h1 className="text-4xl mb-10 mx-2 sm:mx-0">Posts</h1>
+                <form className="mx-2 sm:mx-0 sm:flex sm:flex-row sm:gap-10">
                     <label className="flex flex-col w-max">
                         <span className="text-xl"><FontAwesomeIcon icon={faFilter} className="text-neutral-600 pl-1" /> Filters</span>
                         <section className="flex flex-row gap-5">
@@ -232,24 +234,41 @@ export default function Posts() {
                         </button>
                     </label>
                 </form>
-                {posts.map((post, index) => {
-                    let postDate = new Date(post.createdAt.toDate())
-                    postDate = `${postDate.getDate()} / ${postDate.getMonth()} / ${postDate.getFullYear()}`
-                    return(
-                        <article key={index} className="mb-10 border-b-2 pb-5 border-neutral-300  ">
-                            {post.image == "" ? <></> :<Image loading={index === 0 ? "eager" : "lazy"} src={post.image} width={0} height={0} sizes="100vw" quality={50} className="w-full h-640 object-cover rounded mb-5 border-2 border-black"  alt="food photo"/>}
-                            <h1 className="text-2xl py-1 flex flex-row gap-2 items-center"><span className="cursor-pointer hover:text-violet-500 duration-200" onClick={() => {router.push(`/posts/${post.id}`)}} >{post.title}</span> <span className={`bg-${post.difficulty} px-2 rounded text-lg font-bold text-white`}>{post.difficulty}</span></h1>
-                            <p className="text-neutral-700 mb-2">{postDate}</p>
-                            <p className="text-neutral-600 mb-2">${post.price}</p>
-                            <p>{post.description}</p>
-                            <aside className="flex flex-row items-center gap-2">
-                                <button onClick={() => {handleLike(post.id,post.likeCount.users,post.likeCount.likes)}} disabled={post.creatorID === currentUser.uid ? true : false}><FontAwesomeIcon icon={faHeart}  className={`${post.likeCount.users.includes(currentUser.uid)? yourPostCss : otherPostCss} text-xl  m-0`} /></button>
-                                <p>{post.likeCount.likes} </p>
-                            </aside>
-                        </article>
-                    )
-                })}
-                <button onClick={handleLoadMore} className="bg-violet-500 hover:bg-violet-700 text-white duration-300 rounded py-1 text-lg">Load more</button>
+
+                {isLoading ?
+                    <main className="my-32 ">
+                        <div className="loader"></div>
+                    </main>
+                :
+                   <>
+                    {posts.map((post, index) => {
+                        let postDate = new Date(post.createdAt.toDate())
+                        postDate = `${postDate.getDate()} / ${postDate.getMonth()} / ${postDate.getFullYear()}`
+                        return(
+                            <article key={index} className="mb-10 border-b-2 pb-5 border-neutral-300  ">
+                                <figure>
+                                    {post.image == "" ? <></> :
+                                        <Image loading={index === 0 ? "eager" : "lazy"} priority={index === 0 ? true : false }  src={post.image} width={0} height={0} sizes="100vw" quality={30} className="w-full h-480 lg:h-640 object-cover rounded mb-5 border-2 border-black"  alt="photo"/>
+                                    }
+                                    <figcaption className="m-2 sm:m-0">
+                                        <h1 className="text-2xl  flex flex-row gap-2 items-center break-words"><span className="cursor-pointer hover:text-violet-500 duration-200" onClick={() => {router.push(`/posts/${post.id}`)}} >{post.title}</span> <span className={`bg-${post.difficulty} px-2 rounded hidden sm:block text-lg font-bold text-white`}>{post.difficulty}</span></h1>
+                                        <p className={`bg-${post.difficulty} sm:hidden px-2 w-max mt-1 mb-2 rounded text-lg font-bold text-white`}>{post.difficulty}</p>
+                                        <p className="text-neutral-700 my-2">{postDate}</p>
+                                        <p className="text-neutral-600 mb-2">${post.price}</p>
+                                        <p>{post.description}</p>
+                                        <aside className="flex flex-row items-center gap-2 mt-2">
+                                            <button onClick={() => {handleLike(post.id,post.likeCount.users,post.likeCount.likes)}} disabled={post.creatorID === currentUser.uid ? true : false}><FontAwesomeIcon icon={faHeart}  className={`${post.likeCount.users.includes(currentUser.uid)? yourPostCss : otherPostCss} text-xl  m-0`} /></button>
+                                            <p>{post.likeCount.likes} </p>
+                                        </aside>
+                                    </figcaption>
+                                </figure>
+                            </article>
+                        )
+                    })}
+                    <button onClick={handleLoadMore} className="bg-violet-500 hover:bg-violet-700 text-white duration-300 rounded py-1 text-lg">Load more</button>
+                   </> 
+                }
+
             </main>
         </>
     )

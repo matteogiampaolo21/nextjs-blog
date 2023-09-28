@@ -68,10 +68,6 @@ select:-webkit-autofill:focus {
 /*///////////////// Pages ///////////////////////*/
 
 
-/* Home page */
-#home-grid-1{grid-template-areas: "a b" "a c";}
-#grid-item-1{grid-area: a;}#grid-item-2{grid-area: b;}#grid-item-3{grid-area: c;}
-
 /* Posts Page */
 
 .bg-Beginner{background-color: #404040;}
@@ -79,4 +75,20 @@ select:-webkit-autofill:focus {
 .bg-Normal{background-color: #0369a1;}
 .bg-Hard{background-color: #b45309;}
 .bg-Expert{background-color: #b91c1c;}
+
+
+/* Spinner */
+.loader {
+  border: 16px solid #e5e5e5; /* Light grey */
+  border-top: 16px solid #818cf8; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 

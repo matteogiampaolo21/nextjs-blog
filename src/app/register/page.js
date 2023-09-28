@@ -12,7 +12,7 @@ export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const defaultProfilePic = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
+  const defaultProfilePic = 'https://firebasestorage.googleapis.com/v0/b/blog-astro-f0c8b.appspot.com/o/Default_pfp.jpg?alt=media&token=f15fab24-7ab9-4bc5-a16c-830fd2b547d6'
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -40,7 +40,7 @@ export default function Register() {
 
   return (
     <section className="w-1280 mt-10 mx-auto bg-neutral-200 text-black border-2 p-10 rounded border-black">
-      <h1 className="text-4xl mb-3">Register</h1>
+      <h1 className="text-4xl font-bold mb-3">Register</h1>
       <p className="text-lg mb-5">Already have an account? <a className="text-indigo-500" href="/signin">Sign in</a></p>
 
       <form className="flex flex-col text-lg" >
