@@ -23,12 +23,16 @@ export const Navbar = () => {
                 return
             }
         })
-
+        if(window.innerWidth > 639){
+            setHide(false)
+        }else{
+            setHide(true)
+        }
         window.addEventListener('resize', () => {
             if ( window.innerWidth > 639){
                 setHide(false);
             }else{
-                setHide(true)
+                setHide(true);
             } 
         })
     },[])

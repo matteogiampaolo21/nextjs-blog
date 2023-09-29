@@ -78,8 +78,15 @@ export default function Create() {
 
     }
     const handlePicChange = (e) => {
+        console.log(e.target.files[0]["type"])
+        const validTypes = ['image/gif','image/jpeg','image/png']
+        if(!validTypes.includes(e.target.files[0]["type"])){
+            console.log("efe")
+            alert("Please put in a valid image file.");
+            return
+        }
         if (e.target.files[0]) {
-            setPhoto(e.target .files[0])
+            setPhoto(e.target.files[0])
         }
         // document.getElementById("img-label-btn").textContent = "File Uploaded"
     }
@@ -145,8 +152,8 @@ export default function Create() {
 
                     <label htmlFor="image-btn">Image</label> 
                     <label id="img-label-btn" className={`${photo ? "text-indigo-500" : ""} ${isLoading? fileCSSloading : fileCSS} duration-300 px-3 py-1 mt-2 rounded text-lg shadow-sm text-center `}>
-                        <input required disabled={isLoading} onChange={handlePicChange} className="hidden" id="file-input" type="file"/>
-                        {photo?"File uploaded" : "Upload File"}
+                        <input required disabled={isLoading} onChange={handlePicChange} accept="image/*" className="hidden" id="file-input" type="file"/>
+                        {photo?"Image uploaded" : "Upload Image"}
                     </label>
                     
                     <button disabled={isLoading} onClick={createPost}  id="image-btn" className="bg-indigo-500 disabled:bg-indigo-300 hover:bg-indigo-600 border-2 border-indigo-600 duration-300 mt-5 w-max text-white px-3 py-1 rounded text-base shadow-sm ">Submit Post</button>
