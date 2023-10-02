@@ -1,5 +1,5 @@
 
-import {SiginForm} from "../../components/siginForm";
+import { SiginForm } from "../../components/siginform";
 import { metadata } from "../layout"
 
 export default function SignIn() {
