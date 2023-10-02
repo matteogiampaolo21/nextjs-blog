@@ -7,7 +7,7 @@ export default function Register() {
   metadata.title = "Register"
 
   return (
-    <section className="w-1280 mt-10 mx-auto bg-neutral-200 text-black border-2 p-10 rounded border-black">
+    <section className="xl:w-1280 lg:w-1024 md:w-768 sm:w-640 w-320 mt-10 mx-auto bg-neutral-200 text-black border-2 p-10 rounded border-black">
       <h1 className="text-4xl font-bold mb-3">Register</h1>
       <p className="text-lg mb-5">Already have an account? <a className="text-indigo-500" href="/signin">Sign in</a></p>
       <RegisterForm/>

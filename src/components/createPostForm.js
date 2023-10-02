@@ -5,6 +5,7 @@ import { auth, storage, db } from '../../firebase/firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'next/navigation';
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+
 function CreatePostForm() {
     
 
@@ -34,7 +35,7 @@ function CreatePostForm() {
             }
         })
         
-    }, [])
+    }, [router])
 
     const createPost = async(e) => {
         if (title === "" || desc === "" || mainBody === "" || price === "0"){

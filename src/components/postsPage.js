@@ -68,7 +68,7 @@ function PostsPage() {
         }
         getPosts();
         
-    }, [])
+    }, [firebaseQuery,router])
 
     const handleLoadMore = async () => {
         const lastPostTime = posts[posts.length-1].createdAt

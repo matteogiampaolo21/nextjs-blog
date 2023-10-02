@@ -30,7 +30,7 @@ function LikePostsCard({userID}) {
             }
         }
         getInfo()
-    }, [])
+    }, [userID])
 
     return (
         <main className="flex flex-col bg-neutral-200 text-black border-2 border-black shadow-md p-10 rounded  xl:w-1280 lg:w-1024 md:w-768 sm:w-640 w-320 mx-auto mt-10">

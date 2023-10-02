@@ -31,7 +31,7 @@ function ProfileContainer() {
             }
         })
         
-    }, [])
+    }, [router])
     const reload = () => {
         router.refresh();
     }
@@ -89,7 +89,6 @@ function ProfileContainer() {
                         </section>
 
                         <figure className="flex flex-col justify-center items-center mb-14 sm:mb-0">
-                            {/* <img class="rounded-full w-40 shadow border-2 border-neutral-400"  src={currentUser.photoURL} alt=""/> */}
                             {currentUser.photoURL ? <Image priority src={currentUser.photoURL} quality={30} width={160} height={160} className="rounded-full object-cover w-48 h-48 sm:w-80 sm:h-80 lg:w-40 lg:h-40 shadow border-2 border-neutral-400" alt="profile pic" /> : <p>No profile pic.</p>}
                             <figcaption className="mt-5 flex flex-col w-full sm:w-max sm:flex-row lg:flex-col gap-3 ">
                                 <label className={`${photo ? "text-indigo-500" : ""} ${isLoading? fileCSSloading : fileCSS} duration-300 px-3 py-1 rounded text-lg shadow-sm text-center`}>
