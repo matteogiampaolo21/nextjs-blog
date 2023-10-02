@@ -1,6 +1,6 @@
 
 
-import RegisterForm from "@/components/registerForm";
+import RegisterForm from "../../components/registerForm";
 import { metadata } from "../layout";
 export default function Register() {
    

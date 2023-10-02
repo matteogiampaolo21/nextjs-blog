@@ -1,5 +1,5 @@
 import { metadata } from "../layout";
-import CreatePostForm from "@/components/createPostForm";
+import CreatePostForm from "../../components/createPostForm";
 
 export default function Create() {
     metadata.title = "Create post"

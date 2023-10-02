@@ -1,6 +1,6 @@
 
 
-import ProfileContainer from '@/components/profileContainer';
+import ProfileContainer from '../../components/profileContainer';
 import { metadata } from '../layout';
 
 export default function Profile() {

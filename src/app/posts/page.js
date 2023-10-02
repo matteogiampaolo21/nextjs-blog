@@ -1,5 +1,5 @@
 
-import PostsPage from "@/components/postsPage";
+import PostsPage from "../../components/postsPage";
 import { metadata } from "../layout";
 
 
