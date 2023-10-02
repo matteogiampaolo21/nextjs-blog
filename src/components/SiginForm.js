@@ -4,7 +4,8 @@ import { auth } from '../../firebase/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
-function SiginForm() {
+
+export const SiginForm = () => {
     const router = useRouter()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -39,4 +40,3 @@ function SiginForm() {
     )
 }
 
-export default SiginForm;
