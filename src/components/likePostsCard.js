@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 function LikePostsCard({userID}) {
+    
+    const router = useRouter()
     const [likedPosts, setLikedPosts] = useState([])
 
     useEffect(()=>{

@@ -11,6 +11,7 @@ config.autoAddCss = false;
 
 export const metadata = {
   title: 'Next JS App',
+  description: "A blog made with Next.js. View, create and show your posts with anyone. Sign in now!"
 }
 
 export default function RootLayout({ children }) {

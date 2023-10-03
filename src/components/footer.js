@@ -36,10 +36,10 @@ export const Footer = () => {
                         <h1 className="border-b-4 border-indigo-400 pb-2 px-3 font-bold text-xl w-max lg:w-full">Useful links</h1>
                     </header>
                     <div className="flex flex-col text-lg lg:text-base gap-5 font-bold pl-3">
-                        <p><a href="">Your Account</a></p>
-                        <p><a href="">Become an Affiliate</a></p>
-                        <p><a href="">Shipping Rates</a></p>
-                        <p><a href="">Help</a></p>
+                        <p><a href="/">Your Account</a></p>
+                        <p><a href="/">Become an Affiliate</a></p>
+                        <p><a href="/">Shipping Rates</a></p>
+                        <p><a href="/">Help</a></p>
                     </div>
                 </article>
 

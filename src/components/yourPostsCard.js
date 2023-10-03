@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 function YourPostsCard({userID}) {
+    
+    const router = useRouter()
     const [posts, setPosts] = useState([]);
     useEffect(()=>{
         const getInfo = async () => {
             if (userID){
-                const qPosts = query(collection(db, 'posts'), where("creatorID", "==", userID),orderBy("createdAt","desc"));
+                const qPosts = query(collection(db, 'posts'), where("creatorID", "==", userID),orderBy("createdAt","desc"),limit(10));
                 
                 const querySnapshotPosts = await getDocs(qPosts);
                 
