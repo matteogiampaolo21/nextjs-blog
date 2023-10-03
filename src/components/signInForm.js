@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
 
-export const SiginForm = () => {
+export const SignInForm = () => {
     const router = useRouter()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
