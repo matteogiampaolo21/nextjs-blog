@@ -41,7 +41,10 @@ function ProfileContainer() {
             alert("Please upload a photo first.")
             return
         }
-        const fileRef = ref(storage, currentUser.uid + '.png');
+        // let imageType = (photo.type);
+        // imageType = imageType.split("/").pop();
+        
+        const fileRef = ref(storage,'users/' + currentUser.uid);
         
         setLoading(true);
         
@@ -68,7 +71,7 @@ function ProfileContainer() {
     }
     const handlePicChange = (e) => {
         if (e.target.files[0]) {
-            setPhoto(e.target .files[0])
+            setPhoto(e.target.files[0])
         }
     }
     
