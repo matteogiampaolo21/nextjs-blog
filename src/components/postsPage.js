@@ -35,7 +35,7 @@ function PostsPage() {
     const yourPostCss = "text-red-500";
     const otherPostCss = "text-neutral-400 cursor-pointer duration-200 hover:text-red-400";
     
-    const [firebaseQuery , setFireQuery] = useState(query(collection(db, "posts"),orderBy("createdAt","desc"),limit(1)))
+    const [firebaseQuery , setFireQuery] = useState(query(collection(db, "posts"),orderBy("createdAt","desc"),limit(10)))
     // let firebaseQuery = query(collection(db, "posts"),orderBy("createdAt","desc"),limit(10));
     const postsRef = collection(db,"posts");
     
@@ -243,7 +243,7 @@ function PostsPage() {
                     <article key={index} className="mb-10 border-b-2 pb-5 border-neutral-300  ">
                         <figure>
                             {post.image == "" ? <></> :
-                                <Image loading={index === 0 ? "eager" : "lazy"} priority={index === 0 ? true : false }  src={post.image} width={1152} height={768} sizes="100vw" quality={30} className="mx-auto object-cover rounded mb-5 border-2 border-black"  alt="photo"/>
+                                <Image loading={index === 0 ? "eager" : "lazy"} priority={index === 0 ? true : false }  src={post.image} width={1152} height={768} sizes="100vw" quality={30} className="mx-auto h-186-img sm:h-357-img md:h-429-img lg:h-600-img xl:h-768-img object-cover rounded mb-5 border-2 border-black"  alt="photo"/>
                             }
                             <figcaption className="m-2 sm:m-0">
                                 <h1 className="text-2xl  flex flex-row gap-2 items-center break-words"><span className="cursor-pointer hover:text-violet-500 duration-200" onClick={() => {router.push(`/posts/${post.id}`)}} >{post.title}</span> <span className={`bg-${post.difficulty} px-2 rounded hidden sm:block text-lg font-bold text-white`}>{post.difficulty}</span></h1>
