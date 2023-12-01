@@ -87,6 +87,16 @@ select:-webkit-autofill:focus {
   animation: spin 1.5s linear infinite;
 }
 
+.loader-sm {
+  border: 5px solid #e5e5e5; /* Light grey */
+  border-top: 5px solid #818cf8; /* Blue */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin:0 auto;
+  animation: spin 1.5s linear infinite;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
