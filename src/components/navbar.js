@@ -49,7 +49,6 @@ export const Navbar = () => {
             console.error(err)
         }
     }
-    console.log(isLoading)
     return (
         <header className="xl:w-1280 lg:w-1024 md:w-768 sm:w-640 w-320 mx-auto bg-neutral-200 border-2 text-black border-black rounded shadow-md p-5 text-lg mt-10 ">
             <nav>

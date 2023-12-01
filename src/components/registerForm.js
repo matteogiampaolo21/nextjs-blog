@@ -45,8 +45,6 @@ function RegisterForm() {
                 })
             }
         ).catch((err)=>{
-            console.log(Object.keys(err));
-            console.log(err.code)
             if (err.code == "auth/email-already-in-use"){
                 loginBtn.append(loginText)
                 setCSS('hidden')
