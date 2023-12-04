@@ -32,6 +32,7 @@ Users must be logged in to access any features and would be redirected to the re
 ![Register Page](/readMeImg/register-nextjs.png)
 
 ### Resources used:
+* Firebase Authentication
 * Firestore Database
 * Firebase Storage
 * Next.JS
